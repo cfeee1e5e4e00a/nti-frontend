@@ -1,7 +1,5 @@
 <template>
   <div>
-    <AppBar />
-    <a>эбаут</a>
   </div>
 </template>
 
@@ -9,11 +7,12 @@
 import AppBar from '../components/AppBar.vue'
 
 export default {
-  components: {
+  components: [
     AppBar
-  }
+  ]
 }
 </script>
 
 <style>
+
 </style>
