@@ -7,7 +7,8 @@ import Me from '../views/Me.vue'
 import Schedule from '../views/Schedule.vue'
 import Stash from '../views/Stash.vue'
 import Stream from '../views/Stream.vue'
-import Login from '../views/Login.vue'
+import SignIn from '../views/SignIn.vue'
+import SignUp from '../views/SignUp.vue'
 
 Vue.use(VueRouter)
 
@@ -43,9 +44,14 @@ const routes = [
     component: Stream
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
+    path: '/signin',
+    name: 'SignIn',
+    component: SignIn
+  },
+  {
+    path: '/signup',
+    name: 'SignUp',
+    component: SignUp
   }
 ]
 

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <AppBar/>
   </div>
 </template>
 
@@ -7,12 +8,12 @@
 import AppBar from '../components/AppBar.vue'
 
 export default {
-  components: [
+  components: {
     AppBar
-  ]
+  }
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
