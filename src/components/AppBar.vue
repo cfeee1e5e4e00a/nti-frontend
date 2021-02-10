@@ -12,6 +12,10 @@
         </ul>
       </div>
     </div>
+    <div class="login">
+      <a class="btn btn-success" href="/#/signin">Войти</a>
+      <a class="btn btn-outline-success" href="/#/signup">Регистрация</a>
+    </div>
   </nav>
 </template>
 
@@ -30,6 +34,8 @@ export default {
       ]
     }
   },
+  methods: {
+  },
   components: {
   },
   computed: {
@@ -41,4 +47,14 @@ export default {
 </script>
 
 <style scoped>
+.login {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  margin-right: 15px;
+}
 </style>
