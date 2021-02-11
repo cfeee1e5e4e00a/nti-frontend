@@ -9,10 +9,16 @@ import Stash from '../views/Stash.vue'
 import Stream from '../views/Stream.vue'
 import SignIn from '../views/SignIn.vue'
 import SignUp from '../views/SignUp.vue'
+import RestorePassword from '../views/RestorePassword.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/404',
+    alias: '*',
+    component: { render: (h) => h('div', ['page not found! :(']) } 
+  },
   {
     path: '/',
     name: 'Home',
@@ -52,6 +58,11 @@ const routes = [
     path: '/signup',
     name: 'SignUp',
     component: SignUp
+  },
+  {
+    path: '/restore',
+    name: 'RestorePassword',
+    component: RestorePassword
   }
 ]
 

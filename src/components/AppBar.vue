@@ -12,6 +12,13 @@
         </ul>
       </div>
     </div>
+    <div v-if="!isLoggedIn" class="login">
+      <a class="btn btn-success" href="/#/signin">Войти</a>
+      <a class="btn btn-outline-success" href="/#/signup">Регистрация</a>
+    </div>
+    <div v-else>
+      <h3>Логгед ин</h3>
+    </div>
   </nav>
 </template>
 
@@ -30,18 +37,30 @@ export default {
       ]
     }
   },
+  methods: {
+  },
   components: {
   },
   computed: {
     currentPage () {
       return this.$route.name;
+    },
+    isLoggedIn () {
+      return this.$store.getters.loggedIn;
     }
   }
 }
 </script>
 
 <style scoped>
-.navbar {
-  display: inline;
+.login {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  margin-right: 15px;
 }
 </style>

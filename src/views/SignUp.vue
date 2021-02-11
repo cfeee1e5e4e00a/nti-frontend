@@ -1,9 +1,10 @@
 <template>
   <div class="container">
-    <form class="form">
+    <h2>Регистрация</h2>
+    <div class="form">
       <div class="mb-3">
         <label class="form-label">Электронная почта</label>
-        <input type="text" class="form-control">
+        <input type="text" class="form-control" v-model="email">
       </div>
       <div class="alert alert-primary" role="alert">
         Пароль должен содержать не менее 8 и не более 20 символов, содержать как минимум одну букву,
@@ -26,11 +27,13 @@
       <div class="d-grid gap-2">
         <button v-on:click="signUp" class="btn btn-primary btn-lg">Зарегистрироваться</button>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
+import { API_URL } from '../api.js';
+
 export default {
   data () {
     return {
@@ -38,14 +41,21 @@ export default {
       firstPassword: '',
       secondPassword: '',
       passwordsEqual: true,
-      badPassword: true,
+      badPassword: false,
     }
   },
   methods: {
-    signUp () {
-      console.log('1234')
+    async signUp () {
+      console.log('1234');
       if (!this.badPassword && this.passwordsEqual) {
-        console.log('fuck your api i got nice pASS and email')
+        console.log('ftechins...')
+        await fetch(`${API_URL}/api/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify({ username: this.email, password: this.firstPassword })
+        });
       }
     },
     checkPassword () {
@@ -54,11 +64,17 @@ export default {
       } else {
         this.passwordsEqual = true;
       }
+
+      if (this.firstPassword.length === 0) {
+        this.badPassword = false;
+        return;
+      }
+
       if (
-        (this.firstPassword.length < 8 || this.firstPassword.length > 20)
-        || (/[A-Z]/g.test(this.firstPassword))
-        || (/[0-9]/g.test(this.firstPassword))
-        || (/[!@#$%^&*.,:;\-+=]/g.test(this.firstPassword))
+        (this.firstPassword.length >= 8 || this.firstPassword.length <= 20)
+        && (/[A-Z]/g.test(this.firstPassword))
+        && (/[0-9]/g.test(this.firstPassword))
+        && (/[!@#$%^&*.,:;\-+=]/g.test(this.firstPassword))
       ) {
         this.badPassword = false;
       } else {
@@ -75,10 +91,10 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 1.25rem;
 }
 
 .form {
-  margin-top: 1.25rem;
   border: 1px solid #ced4da;
   border-radius: .25rem;
   padding-left: 25px;
@@ -93,7 +109,8 @@ export default {
 
 .alert {
   hyphens: manual;
-  max-width: 20rem;
+  min-width: 16rem;
+  max-width: 16rem;
 }
 
 .alert-hidden {
