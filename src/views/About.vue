@@ -22,6 +22,12 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 10rem;
+  margin-top: 3rem;
 }
+
+.alert {
+  display: inline;
+  flex-direction: row;
+}
+
 </style>
