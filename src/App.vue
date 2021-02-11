@@ -11,6 +11,7 @@ export default {
   },
   beforeMount () {
     this.$store.dispatch('restoreFromCookie');
+    this.$store.dispatch('developersUpdate');
   }
 }
 </script>

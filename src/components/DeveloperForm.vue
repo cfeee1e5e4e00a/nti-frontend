@@ -1,7 +1,8 @@
 <template>
     <div class="container">
-        <div class="alert alert-secondary" role="developer" v-for="devr in developers" :key="devr.name">
-            <div class="card">
+        <div class="alert alert-secondary" role="developer" v-for="devr in allDevelopers" :key="devr.name" max-width="1rem">
+            <div class="card" width="250px">
+                <img v-bind:src="devr.img" class="card-img-top" width="250px" height="250px"> 
                 <div class="card-body">
                     <h3 class="card-title">{{devr.name}}</h3>
                 </div>
@@ -22,24 +23,14 @@ export default {
   name: 'DeveloperForm',
   data () {
     return {
-      developers: [
-        { name: 'Yasosu Bibu', img: '', properties: [
-            {key: 'role', val: 'cock sucker'}, 
-            {key: 'age',  val: 54} ,  
-            {key: 'link', val: 'https://fuckmehard.vnos'}]},
-        { name: 'Pjer Deju',   img: '', properties: [
-            {key: 'role', val: 'dungeon master'}, 
-            {key: 'age',  val: 10} ,  
-            {key: 'link', val: 'https://freecamwhores.ua'}]},
-            
-      ]
+      
     }
   },
   components: {
   },
   computed: {
-    getDevelopers () {
-      return this.developers;
+    allDevelopers () {
+      return this.$store.getters.allDevelopers
     }
   }
 }
@@ -47,20 +38,27 @@ export default {
 
 <style scoped>
 .container {
-  display: flex;
-  flex-direction: column;
+  display:         flex;
+  flex-direction:  column;
   justify-content: center;
-  align-items: center;
-  margin-top: 3rem;
+  align-items:     center;
+  margin-top:      3rem;
 }
 
 .alert {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  
+  display:         flex;
+  flex-direction:  row;
+  justify-content: center;
+  align-items:     center;
 }
 
-.card-body {
+.card {
+  min-width: 250px;
+  max-width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }
 </style>
