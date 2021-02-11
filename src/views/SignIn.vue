@@ -13,6 +13,9 @@
       <div class="d-grid gap-2">
         <button class="btn btn-primary btn-lg" v-on:click="signIn">Войти</button>
       </div>
+      <div v-if="badAccess" class="alert alert-danger">
+        Неверный пароль или логин
+      </div>
     </div>
     <a href="/#/restore">Забыли пароль?</a>
     <a href="/#/signup">У вас еще нет аккаунта?</a>
@@ -24,13 +27,24 @@ export default {
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      badAccess: false
     }
   },
   methods: {
-    signIn () {
-      this.$store.dispatch('signIn', { username: this.email, password: this.password });  
+    async signIn () {
+      this.badAccess = false;
+      await this.$store.dispatch('signIn', { username: this.email, password: this.password });
+      if (!this.isLoggedIn) {
+        this.badAccess = true;
+        return;
+      }
       window.location.href = '/#/';
+    }
+  },
+  computed: {
+    isLoggedIn () {
+      return this.$store.getters.loggedIn;
     }
   }
 }

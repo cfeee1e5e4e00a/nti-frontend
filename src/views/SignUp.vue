@@ -18,10 +18,10 @@
         <label class="form-label">Повторите пароль</label>
         <input v-model="secondPassword" v-on:input="checkPassword" type="password" class="form-control">
       </div>
-      <div class="alert alert-danger" id="badPassword" v-bind:class="badPassword?'':'alert-hidden'">
+      <div class="alert alert-danger" id="badPassword" v-if="badPassword">
         Неподходящий пароль
       </div>
-      <div class="alert alert-warning" id="passwordsDontEqual" v-bind:class="passwordsEqual?'alert-hidden':''">
+      <div class="alert alert-warning" id="passwordsDontEqual" v-if="!passwordsEqual">
         Пароли должны совпадать
       </div>
       <div class="d-grid gap-2">
@@ -46,9 +46,7 @@ export default {
   },
   methods: {
     async signUp () {
-      console.log('1234');
       if (!this.badPassword && this.passwordsEqual) {
-        console.log('ftechins...')
         await fetch(`${API_URL}/api/register`, {
           method: 'POST',
           headers: {
@@ -57,6 +55,7 @@ export default {
           body: JSON.stringify({ username: this.email, password: this.firstPassword })
         });
       }
+      window.location.href = '/#/signin';
     },
     checkPassword () {
       if (this.firstPassword !== this.secondPassword) {
