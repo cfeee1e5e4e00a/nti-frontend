@@ -55,11 +55,19 @@ export default {
     }
   },
   state: {
-    loggedIn: false
+    loggedIn: false,
+    firstName: '',
+    lastName: ''
   },
   getters: {
     loggedIn (state) {
       return state.loggedIn;
+    },
+    firstName (state) {
+      return state.firstName;
+    },
+    lastName (state) {
+      return state.lastName;
     }
   }
 }
