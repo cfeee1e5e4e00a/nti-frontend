@@ -17,17 +17,4 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 3rem;
-}
-
-.alert {
-  display: inline;
-  flex-direction: row;
-}
-
 </style>
