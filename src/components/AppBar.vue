@@ -12,9 +12,12 @@
         </ul>
       </div>
     </div>
-    <div class="login">
+    <div v-if="!isLoggedIn" class="login">
       <a class="btn btn-success" href="/#/signin">Войти</a>
       <a class="btn btn-outline-success" href="/#/signup">Регистрация</a>
+    </div>
+    <div v-else>
+      <h3>Логгед ин</h3>
     </div>
   </nav>
 </template>
@@ -41,6 +44,9 @@ export default {
   computed: {
     currentPage () {
       return this.$route.name;
+    },
+    isLoggedIn () {
+      return this.$store.getters.loggedIn;
     }
   }
 }

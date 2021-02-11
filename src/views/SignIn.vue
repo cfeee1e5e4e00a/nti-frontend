@@ -3,15 +3,15 @@
     <h2>Вход</h2>
     <div class="form">
       <div class="mb-3">
-        <label class="form-label">Логин</label>
-        <input type="text" class="form-control">
+        <label class="form-label">Электронная почта</label>
+        <input type="text" class="form-control" v-model="email">
       </div>
       <div class="mb-3">
         <label class="form-label">Пароль</label>
-        <input type="password" class="form-control">
+        <input type="password" class="form-control" v-model="password">
       </div>
       <div class="d-grid gap-2">
-        <button class="btn btn-primary btn-lg">Войти</button>
+        <button class="btn btn-primary btn-lg" v-on:click="signIn">Войти</button>
       </div>
     </div>
     <a href="/#/restore">Забыли пароль?</a>
@@ -23,11 +23,15 @@
 export default {
   data () {
     return {
-        
+      email: '',
+      password: ''
     }
   },
   methods: {
-
+    signIn () {
+      this.$store.dispatch('signIn', { username: this.email, password: this.password });  
+      window.location.href = '/#/';
+    }
   }
 }
 </script>

@@ -4,7 +4,7 @@
     <div class="form">
       <div class="mb-3">
         <label class="form-label">Электронная почта</label>
-        <input type="text" class="form-control">
+        <input type="text" class="form-control" v-model="email">
       </div>
       <div class="alert alert-primary" role="alert">
         Пароль должен содержать не менее 8 и не более 20 символов, содержать как минимум одну букву,
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import { API_URL } from '../api.js';
+
 export default {
   data () {
     return {
@@ -43,10 +45,17 @@ export default {
     }
   },
   methods: {
-    signUp () {
-      console.log('1234')
+    async signUp () {
+      console.log('1234');
       if (!this.badPassword && this.passwordsEqual) {
-        console.log('fuck your api i got nice pASS and email')
+        console.log('ftechins...')
+        await fetch(`${API_URL}/api/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify({ username: this.email, password: this.firstPassword })
+        });
       }
     },
     checkPassword () {

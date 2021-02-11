@@ -3,16 +3,13 @@
     <h2>Восстановление пароля</h2>
     <div class="form">
       <div class="mb-3">
-        <label class="form-label">Логин</label>
+        <label class="form-label">Электронная почта</label>
         <input type="text" class="form-control">
       </div>
       <div class="d-grid gap-2">
         <button class="btn btn-primary btn-lg">Восстановить</button>
       </div>
     </div>
-
-
-
   </div>
 </template>
 

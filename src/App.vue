@@ -8,6 +8,9 @@
 export default {
   name: 'App',
   components: {
+  },
+  beforeMount () {
+    this.$store.dispatch('restoreFromCookie');
   }
 }
 </script>
