@@ -16,7 +16,6 @@ export default {
     AppBar, DeveloperForm, FeedBackForm
   },
   computed: {
-
   }
 }
 </script>
