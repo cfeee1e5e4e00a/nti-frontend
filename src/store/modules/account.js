@@ -19,7 +19,7 @@ export default {
       document.cookie = `session=${res.token}`;
       ctx.commit('changeLoginState', true);
 
-      await ctx.dispatch('getUserInfo');
+      await ctx.dispatch('getUsername');
     },
     async logOut (ctx) {     
       const token = getCookie('session');
@@ -39,12 +39,12 @@ export default {
       console.log(token);
       if (typeof token !== 'undefined') {
         ctx.commit('changeLoginState', true);
-        ctx.dispatch('getUserInfo');
+        ctx.dispatch('getUsername');
       }
     },
-    async getUserInfo (ctx) {
+    async getUsername (ctx) {
       const token = getCookie('session');
-      let req = await fetch(`${API_URL}/api/userinfo`, {
+      let req = await fetch(`${API_URL}/api/current_user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json;charset=utf-8'
