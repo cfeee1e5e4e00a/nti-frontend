@@ -29,12 +29,12 @@ export default {
   data () {
     return {
       pages: [
-        { name: 'Home', url: '/#/', title: 'Главная страница', requireLog: false },
-        { name: 'About', url: '/#/about', title: 'О нас', requireLog: false },
-        { name: 'Me', url: '/#/me', title: 'Личный кабинет', requireLog: true },
-        { name: 'Schedule', url: '/#/schedule', title: 'Расписание', requireLog: true },
-        { name: 'Stash', url: '/#/stash', title: 'Склад', requireLog: true },
-        { name: 'Stream', url: '/#/stream', title: 'Стрим', requireLog: true }
+        { name: 'Home',     url: '/#/',         title: 'Главная страница', requireLog: false },
+        { name: 'About',    url: '/#/about',    title: 'О нас',            requireLog: false },
+        { name: 'Me',       url: '/#/me',       title: 'Личный кабинет',   requireLog: true  },
+        { name: 'Schedule', url: '/#/schedule', title: 'Расписание',       requireLog: true  },
+        { name: 'Stash',    url: '/#/stash',    title: 'Склад',            requireLog: true  },
+        { name: 'Stream',   url: '/#/stream',   title: 'Стрим',            requireLog: true  }
       ]
     }
   },
