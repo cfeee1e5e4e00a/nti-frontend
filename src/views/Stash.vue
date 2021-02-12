@@ -19,7 +19,6 @@
         </tr>
       </table>
     </div>
-    <h1>{{ status(getIdByCoordinates(translateCoordinates(0, 0, 0))) }}</h1>
     <div class="control-container">
       <div class="control-target">
         <span v-if="target.location.Rack==='Left'" class="badge bg-primary">Левый стеллаж</span>
@@ -33,6 +32,7 @@
           v-bind:disabled="target.id===-1"
           v-on:click="unload">Выгрузить товар</button>
       </div>
+      <h3>{{ status(target.id) }} {{ target.row }} {{ target.cell }}</h3>
     </div>
   </div>
 </template>
