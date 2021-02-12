@@ -1,13 +1,14 @@
 <template>
   <div class>
     <AppBar/>
-    <table class="stash-grid">
-      <tr v-for="row in leftStash" class="stash-grid-row" v-bind:key="row">
-        <td v-for="cell in row" class="stash-grid-cell" v-bind:key="cell">
-          {{ cell }}
-        </td>
-      </tr>
-    </table>
+    <div class="stash-container">
+      <table v-for="rack in racks" class="stash-grid" v-bind:key="rack">
+        <tr v-for="row in rack" class="stash-grid-row" v-bind:key="row">
+          <td v-for="cell in row" class="stash-grid-cell" v-bind:key="cell" v-bind:class="cell?'red':'green'">
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -20,14 +21,11 @@ export default {
   },
   data () {
     return {
-      leftStash: [
-        ['f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f'],
-        ['f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f'],
-        ['f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f'],
-        ['f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f'],
-        ['f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f'],
-        ['f', 'f', 'f', 'f', 'f', 'f', 'f', 'f', 'f']
-      ]
+    }
+  },
+  computed: {
+    racks () {
+      return this.$store.getters.racks;
     }
   }
 }
@@ -47,4 +45,20 @@ export default {
   width: 32px;
   height: 32px;
 }
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}
+
+.stash-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 </style>
