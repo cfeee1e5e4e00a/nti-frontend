@@ -13,6 +13,7 @@ export default {
     this.$store.dispatch('restoreFromCookie');
     this.$store.dispatch('updateDevelopers');
     this.$store.dispatch('updatePersonalInfo');
+    this.$store.dispatch('updateUsers');
     this.$store.dispatch('startUpdateSchedule');
   }
 }

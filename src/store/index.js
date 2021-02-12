@@ -5,6 +5,7 @@ import account from './modules/account.js';
 import developers from './modules/developers.js';
 import schedule from './modules/schedule.js';
 import personalinfo from './modules/personal-info.js'
+import userlist from './modules/userlist.js'
 
 Vue.use(Vuex)
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     account,
     developers,
     schedule,
-    personalinfo
+    personalinfo,
+    userlist
   }
 })

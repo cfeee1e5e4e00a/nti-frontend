@@ -3,16 +3,16 @@
         <img v-bind:src="getImage" class="img-thumbnail">
         <div class="input-container">
             <div class="input-line" v-for="p in Object.keys(getPersonal)" v-bind:key="p">
-                <a>{{getPersonal[p]}}</a>
-                <button type="button" class="btn btn-light" v-on:click="changeEditingState(p)" >
-                    <img class="btn-edit-img" v-bind:src="getEditIcon">
+                <button type="button" class="btn btn-light" v-on:click="changeEditingState(p);message[p]=''" >
+                    <img v-if="getEditing()[p]" class="btn-edit-img" v-bind:src="getCloseIcon">
+                    <img v-else class="btn-edit-img" v-bind:src="getEditIcon">
+                    
                 </button>
-                
-                <input v-if="getEditing[p]?true:false" v-bind:placeholder="p" v-model="message[p]">
-                <div class="alert alert-secondary" role="alert" v-else>{{getPersonal[p]}}</div>
+                <input v-if="getEditing()[p]" v-bind:placeholder="p" v-model="message[p]">
+                <div v-else class="alert alert-secondary" role="alert">{{getPersonal[p]}}</div>
 
-                <button type="button" class="btn btn-light" >
-                    <img class="btn-submit-img" v-bind:src="getSubmitIcon">
+                <button v-if="getEditing()[p]" type="button" class="btn btn-light" v-on:click="send(p);changeEditingState(p)">
+                    <img class="btn-submit-img" v-bind:src="getSubmitIcon" >
                 </button>
             </div>
         </div>
@@ -24,29 +24,39 @@ export default {
   name: 'PersonalInfo',
   data () {
     return {
+        editing:  {
+            "name":       0, 
+            "surname":    0, 
+            "secondName": 0, 
+            "email":      0, 
+            "phone":      0
+        },
         message: {
-            "name":          "",
-            "surname":       "",
-            "secondaryName": "",
-            "email":         "",
-            "phone":         ""
+            "name":       "",
+            "surname":    "",
+            "secondName": "",
+            "email":      "",
+            "phone":      ""
         }
     }
   },
   methods: {
-      async changeEditingState(key) {
-          await this.$store.dispatch('changeEditingState', key)
+      changePersonal(key) {
+          let tmp = this.getPersonal
+          tmp[key] = this.message[key]
+          this.$store.dispatch('setPersonal', tmp)
       },
-      async changePersonal(key) {
-          await this.$store.dispatch('setPersonal', {...this.data(), key:this.data().message[key]})
+      getEditing() {
+          return this.editing
       },
-      async getEditing() {
-          return await this.$store.dispatch("getEditing")
+      send(p) {
+          this.changePersonal(p)
       },
-      async send(key, m) {
-          if(m=="")return
-          await this.$store.dispatch("setTarget", m)
-          this.message[key] = m
+      setEditing(editing) {
+          this.editing = editing
+      },
+      changeEditingState(key) {
+          this.editing[key] ^= 1
       }
   },
   components: {
@@ -60,6 +70,9 @@ export default {
       },
       getEditIcon() {
           return this.$store.getters.getEditIcon
+      },
+      getCloseIcon() {
+          return this.$store.getters.getCloseIcon
       },
       getSubmitIcon() {
           return this.$store.getters.getSubmitIcon
@@ -78,6 +91,7 @@ export default {
 }
 .alert {
     margin: 0;
+    padding: 0;
 }
 .input-line {
     display: flex;
