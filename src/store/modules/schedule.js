@@ -3,7 +3,7 @@ import { getCookie } from '../../cookie.js';
 
 export default {
   actions: {
-    async updateSchedule (ctx) {
+    async startUpdateSchedule (ctx) {
       let timer = setInterval(async () => {
         const token = getCookie('session');
         let req = await fetch(`${API_URL}/api/items`, {
@@ -17,6 +17,9 @@ export default {
         ctx.commit('setSchedule', res);
       }, 1000);
       ctx.commit('setTimer', timer);
+    },
+    stopUpdateSchedule (ctx) {
+      ctx.commit('clearTimer');
     }
   },
   mutations: {
