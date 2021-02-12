@@ -31,6 +31,15 @@
         <button class="btn btn-primary"
           v-bind:disabled="target.id===-1"
           v-on:click="unload">Выгрузить товар</button>
+        <div v-if="secondTarget.id!==-1" class="control-target">
+          <span v-if="secondTarget.location.Rack==='Left'" class="badge bg-primary">Левый стеллаж</span>
+          <span v-if="secondTarget.location.Rack==='Right'" class="badge bg-primary">Правый стеллаж</span>
+          <span v-if="secondTarget.location.CellSide==='Right'" class="badge bg-primary">Правая сторона</span>
+          <span v-if="secondTarget.location.CellSide==='Left'" class="badge bg-primary">Левая сторона</span>
+          <span v-if="typeof secondTarget.location.CellPosition !== 'undefined'" class="badge bg-primary">ячейка {{ secondTarget.location.CellPosition }}</span>
+        </div>
+        <button class="btn btn-primary"
+          v-on:click="swap">{{ secondTarget.id!==-1?'Переставить':'Выбрать груз для перестановки' }}</button>
       </div>
       <h3>{{ status(target.id) }} {{ target.row }} {{ target.cell }}</h3>
     </div>
@@ -48,7 +57,8 @@ export default {
   },
   data () {
     return {
-      target: { location : {}, rack: -1, row: -1, cell: -1, id: -1 }
+      target: { location : {}, rack: -1, row: -1, cell: -1, id: -1 },
+      secondTarget: { location : {}, rack: -1, row: -1, cell: -1, id: -1 }
     }
   },
   methods: {
@@ -117,6 +127,35 @@ export default {
     status (id) {
       let index = this.schedule.findIndex(a=>a.id===id);
       return index!=-1?this.schedule[index].state:'bad target';
+    },
+    async swap () {
+      if (this.secondTarget.id !== -1) {
+        const token = getCookie('session');
+        let req = await fetch(`${API_URL}/api/move`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+          },
+          body: JSON.stringify({
+            token,
+            id: this.secondTarget.id,
+            rack: this.target.location.Rack,
+            side: this.target.location.CellSide,
+            cell: this.target.location.CellPosition
+          })
+        });
+        if (req.status != 200) {
+          console.warn(`${API_URL}/api/move=${req.status}`);
+          return;
+        }
+      } else {
+        if (this.status(this.target.id) !== 'store') {
+          console.log('YA EBU TVOU MAMASHU');
+          return;
+        }
+        this.secondTarget = this.target;
+        this.target = { location : {}, rack: -1, row: -1, cell: -1, id: -1 };
+      }
     }
   },
   computed: {
