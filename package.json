@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.0.0-beta1",
+    "ngrok": "^3.4.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
