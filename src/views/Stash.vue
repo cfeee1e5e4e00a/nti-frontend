@@ -5,35 +5,31 @@
       <table v-for="(rack, i) in racks" class="stash-grid" v-bind:key="i">
         <tr v-for="(row, j) in rack" class="stash-grid-row" v-bind:key="j">
           <td v-for="(cell, k) in row" class="stash-grid-cell" v-bind:key="k">
-            <button 
-              v-if="!(target.rack === i
-              && target.row === k
-              && target.cell === j)"
+            <button
               class="stash-cell-button"
-              v-on:click="setTarget(i, k, j)"
-              v-bind:class="status(getIdByCoordinates(translateCoordinates(i, k, j)))=='moving'?'blue':(cell?'green':'red')"></button>
-            <button v-else
-              class="stash-cell-button selected-color"  
-              v-on:click="setTarget(i, k, j)"></button>
+              v-bind:disabled="!clickable"
+              v-bind:class="!cell?'green':(getTask(convertCoordinates(i,k,j)).state==='moving'?'blue':'red')" 
+              v-on:click="setTarget(i,k,j)"
+              ></button> 
           </td>
         </tr>
       </table>
     </div>
-    <h1>{{ status(getIdByCoordinates(translateCoordinates(0, 0, 0))) }}</h1>
     <div class="control-container">
-      <div class="control-target">
-        <span v-if="target.location.Rack==='Left'" class="badge bg-primary">Левый стеллаж</span>
-        <span v-if="target.location.Rack==='Right'" class="badge bg-primary">Правый стеллаж</span>
-        <span v-if="target.location.CellSide==='Right'" class="badge bg-primary">Правая сторона</span>
-        <span v-if="target.location.CellSide==='Left'" class="badge bg-primary">Левая сторона</span>
-        <span v-if="typeof target.location.CellPosition !== 'undefined'" class="badge bg-primary">ячейка {{ target.location.CellPosition }}</span>
+      <div class="unload-container">
+        <button class="btn btn-primary" v-on:click="unload">{{ unloadStage==='first'?'Выгрузить':'Выберите ячейку' }}</button>
+        <div class="alert alert-danger" v-if="badFirstTargetMessage">
+          Неподходящая ячейка.
+        </div>
       </div>
-      <div class="onload-container">
-        <button class="btn btn-primary"
-          v-bind:disabled="target.id===-1"
-          v-on:click="unload">Выгрузить товар</button>
+      <div class="swap-container">
+        <button class="btn btn-primary" v-on:click="swap">{{ swapStage==='first'?'Обменять':(swapStage==='second'?'Выберите 1-ю ячейку':'Выберите 2-ю ячейку') }}</button>
+        <div class="alert alert-danger" v-if="badSecondTargetMessage">
+          Неподходящая ячейка.
+        </div>
       </div>
     </div>
+    <!-- <h3></h3> -->
   </div>
 </template>
 
@@ -48,11 +44,58 @@ export default {
   },
   data () {
     return {
-      target: { location : {}, rack: -1, row: -1, cell: -1, id: -1 }
+      clickable: false,
+      targets: {
+        firstTarget: {},
+        secondTarget: {},
+      },
+      unloadStage: 'first',
+      swapStage: 'first',
+      badFirstTargetMessage: false,
+      badSecondTargetMessage: false
     }
   },
   methods: {
     setTarget (rack, row, cell) {
+      if (this.unloadStage === 'second') {
+        let task = this.getTask(this.convertCoordinates(rack, row, cell));
+        if (task.state !== 'store') {
+          this.badFirstTargetMessage = true;
+          setTimeout(function (ctx) { ctx.badFirstTargetMessage = false; }, 2000, this);
+          return;
+        }
+        this.targets.firstTarget = task;
+        this.unloadStage = 'third';
+        this.unload();
+      }
+      if (this.swapStage === 'second') {
+        let task = this.getTask(this.convertCoordinates(rack, row, cell));
+        if (task.state !== 'store') {
+          console.log(task);
+          this.badSecondTargetMessage = true;
+          setTimeout(function (ctx) { ctx.badSecondTargetMessage = false; }, 2000, this);
+          return;
+        }
+        this.targets.firstTarget = task;
+        this.swapStage = 'third';
+        return;
+      }
+      if (this.swapStage === 'third') {
+        let task = this.getTask(this.convertCoordinates(rack, row, cell));
+        if (task.state !== 'not_found') {
+          this.badSecondTargetMessage = true;
+          setTimeout(function (ctx) { ctx.badSecondTargetMessage = false; }, 2000, this);
+          return;
+        }
+        this.targets.secondTarget = task;
+        console.log(this.targets.firstTarget);
+        console.log(this.targets.secondTarget);
+        this.swapStage = 'fourth';
+        this.swap();
+      }
+    },
+    convertCoordinates (rack, row, cell) {
+      // console.log({ rack, row, cell });
       const Racks = {
         0: { Rack: 'Left', CellSide: 'Left' },
         1: { Rack: 'Left', CellSide: 'Right' },
@@ -60,63 +103,94 @@ export default {
         3: { Rack: 'Right', CellSide: 'Right' },
       };
 
-      let location = Racks[rack];
-      location.CellPosition = row * 9 + cell + 1;
-      this.target.location = location;
-      this.target.id = this.getIdByCoordinates(this.target.location);
-      this.target.rack = rack;
-      this.target.row = row;
-      this.target.cell = cell;
-    },
-    translateCoordinates (rack, row, cell) {
-      const Racks = {
-        0: { Rack: 'Left', CellSide: 'Left' },
-        1: { Rack: 'Left', CellSide: 'Right' },
-        2: { Rack: 'Right', CellSide: 'Left' },
-        3: { Rack: 'Right', CellSide: 'Right' },
+      return {
+        Rack: Racks[rack].Rack,
+        CellSide: Racks[rack].CellSide,
+        CellPosition: row * 9 + cell + 1
       };
-
-      let location = Racks[rack];
-      location.CellPosition = row * 9 + cell + 1;
-      location.id = this.getIdByCoordinates(this.target.location);
-      location.rack = rack;
-      location.row = row;
-      location.cell = cell;
-      return location;
     },
-    getIdByCoordinates ({ Rack, CellSide, CellPosition }) {
-      for (let i = 0; i < this.schedule.length; i++) {
+    getTask ({ Rack, CellSide, CellPosition }) {
+      // console.log({ Rack, CellSide, CellPosition }); 
+      for (let i in this.schedule) {
         if (typeof this.schedule[i].location === 'undefined' || this.schedule[i].location === null) {
           continue;
         }
-        if (this.schedule[i].location.Rack === Rack) {
-          if (this.schedule[i].location.CellSide === CellSide) {
-            if (this.schedule[i].location.CellPosition === CellPosition) {
-              return this.schedule[i].id;
-            }
-          }
+        if (
+          this.schedule[i].location.Rack === Rack &&
+          this.schedule[i].location.CellSide === CellSide &&
+          this.schedule[i].location.CellPosition === CellPosition
+        ) {
+          return this.schedule[i];
         }
       }
-      return -1;
+      return {
+        state: 'not_found',
+        location : {
+          Rack,
+          CellSide,
+          CellPosition
+        }
+      }
     },
     async unload () {
-      const token = getCookie('session');
-      let req = await fetch(`${API_URL}/api/unload`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-          },
-        body: JSON.stringify({ token, id: this.target.id })
-      });
-      if (req.status != 200) {
-        console.log(`${API_URL}/api/unload=${req.status}`);
+      if (this.unloadStage === 'first') {
+        this.clickable = true;
+        this.unloadStage = 'second';
         return;
       }
-      this.target = { location : {}, rack: -1, row: -1, cell: -1, id: -1 };
+      if (this.unloadStage === 'third') {
+        this.clickable = false;
+        this.unloadStage = 'first';
+        const token = getCookie('session');
+        console.log(this.targets.firstTarget);
+        let req = await fetch(`${API_URL}/api/unload`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json;charset=utf-8'
+            },
+          body: JSON.stringify({ token, id: this.targets.firstTarget.id })
+        });
+        this.targets.firstTarget = {};
+        if (req.status != 200) {
+          console.log(`${API_URL}/api/unload=${req.status}`);
+          return;
+        }
+        return;
+      }
     },
-    status (id) {
-      let index = this.schedule.findIndex(a=>a.id===id);
-      return index!=-1?this.schedule[index].state:'bad target';
+    async swap () {
+      if (this.swapStage === 'first') {
+        this.clickable = true;
+        this.swapStage = 'second';
+        return;
+      }
+      if (this.swapStage === 'fourth') {
+        this.clickable = false;
+        this.swapStage = 'first';
+        const token = getCookie('session');
+        console.log(this.targets.firstTarget);
+        console.log(this.targets.secondTarget);
+        let req = await fetch(`${API_URL}/api/move`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json;charset=utf-8'
+            },
+          body: JSON.stringify({
+            token,
+            id: this.targets.firstTarget.id,
+            rack: this.targets.secondTarget.location.Rack,
+            side: this.targets.secondTarget.location.CellSide,
+            cell: this.targets.secondTarget.location.CellPosition
+          })
+        });
+        this.targets.firstTarget = {};
+        this.targets.secondTarget = {};
+        if (req.status != 200) {
+          console.log(`${API_URL}/api/move=${req.status}`);
+          return;
+        }
+        return;
+      }
     }
   },
   computed: {
@@ -133,8 +207,6 @@ export default {
 <style scoped>
 .stash-grid {
   border: 1px #ced4da solid;
-  margin-left: auto;
-  margin-right: auto;
   margin-top: 25px;
 }
 
@@ -161,8 +233,10 @@ export default {
 .stash-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content:space-between;
   align-items: center;
+  margin-left: 3rem;
+  margin-right: 3rem;
 }
 
 .control-container {
@@ -170,7 +244,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-left: 15rem;
+  margin-left: 3rem;
   margin-top: 25px;
 }
 
@@ -192,5 +266,25 @@ export default {
 
 .control-target {
   margin-bottom: 15px;
+}
+
+.unload-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.swap-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.alert {
+  margin-left: 15px;
 }
 </style>

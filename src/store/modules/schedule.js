@@ -39,7 +39,7 @@ export default {
       for (let rack = 0; rack < table.length; rack++) {
         table[rack] = new Array(9);
         for (let i = 0; i < table[rack].length; i++) {
-          table[rack][i] = new Array(6);
+          table[rack][i] = new Array(6).fill(0);
         }
       }
 
