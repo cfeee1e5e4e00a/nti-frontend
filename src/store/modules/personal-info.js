@@ -1,17 +1,28 @@
+import { API_URL } from '../../api.js';
+import { getCookie } from '../../cookie.js';
+
 export default {
     actions: {
         async updatePersonalInfo(ctx) {
-            // Need to do some magic with data here
-            // like: make req to server
-            // ----- overwrite values if they exist
-            // ----- dk
+            const token = getCookie('session');
+            let req = await fetch(`${API_URL}/api/current_user`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify({ token })
+            });
+            let res = await req.json();
+
+            console.log(res.username);
+
             ctx.commit("setAvatar", "https://sun9-67.userapi.com/impg/Uq2oCvD8D5gBVHMtHmmFk-j__iM9Q-0hjCQjTg/vW4vrYG-V0M.jpg?size=314x318&quality=96&proxy=1&sign=6ec78e4c11d99487db1f872aec8b7d06&type=album")
             ctx.commit("setPersonal", {
-                "name":       "andrei",
-                "surname":    "dmitriy",
-                "secondName": "cockand",
-                "email":      "ya@ti.@",
-                "phone":      "8(228)228-22-82"
+                "name":       "name",
+                "surname":    "surname",
+                "secondName": "second name",
+                "email":      res.username,
+                "phone":      "phone number"
             })
         },
         setPersonal(ctx, personal) {

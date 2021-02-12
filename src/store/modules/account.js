@@ -52,7 +52,7 @@ export default {
         body: JSON.stringify({ token })
       });
       let res = await req.json();
-      console.log(res);
+      //console.log(res);
       ctx.commit('setUserInfo', res);
     }
   },
