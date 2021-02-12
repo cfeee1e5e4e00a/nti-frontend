@@ -26,8 +26,8 @@
 export default {
   data () {
     return {
-      email: '',
-      password: '',
+      email:     '',
+      password:  '',
       badAccess: false
     }
   },
@@ -52,21 +52,21 @@ export default {
 
 <style scoped>
 .container {
-  display: flex;
-  flex-direction: column;
+  display:         flex;
+  flex-direction:  column;
   justify-content: center;
-  align-items: center;
-  margin-top: 1.25rem;
+  align-items:     center;
+  margin-top:      1.25rem;
 }
 
 .form {
   border: 1px solid #ced4da;
   border-radius: .25rem;
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-top: 15px;
-  padding-bottom: 5px;
-  margin-bottom: 15px;
+  padding-left:   25px;
+  padding-right:  25px;
+  padding-top:    15px;
+  padding-bottom:  5px;
+  margin-bottom:  15px;
 }
 
 .mb-3 {

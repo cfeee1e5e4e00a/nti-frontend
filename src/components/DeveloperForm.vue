@@ -46,7 +46,6 @@ export default {
 }
 
 .alert {
-  
   display:         flex;
   flex-direction:  row;
   justify-content: center;
@@ -54,11 +53,11 @@ export default {
 }
 
 .card {
-  min-width: 250px;
-  max-width: 250px;
-  display: flex;
+  min-width:       250px;
+  max-width:       250px;
+  display:         flex;
   justify-content: center;
-  align-items: center;
+  align-items:     center;
   
 }
 </style>
