@@ -1,6 +1,7 @@
 <template>
   <div>
     <AppBar/>
+    <button class="btn btn-primary" v-on:click="downloadCsv">Скачать таблицу</button>
     <table class="table">
       <thead>
         <tr>
@@ -27,6 +28,8 @@
 
 <script>
 import AppBar from '../components/AppBar.vue'
+import { API_URL } from '../api.js';
+import { getCookie } from '../cookie';
 
 export default {
   data () {
@@ -40,6 +43,28 @@ export default {
         { name: 'unload_time', label: 'Время отбытия' },
         { name: 'manufacturer', label: 'Производитель' },
       ]
+    }
+  },
+  methods: {
+    async downloadCsv () {
+      const token = getCookie('session');
+      let req = await fetch(`${API_URL}/api/items.csv`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify({ token })
+      });
+      let res = await req.blob();
+
+      let a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.href = window.URL.createObjectURL(res);
+      a.download = 'database.csv';
+      a.click();
+      window.URL.revokeObjectURL(a.href);
+      a.remove();
     }
   },
   components: {

@@ -10,6 +10,7 @@
               v-bind:disabled="!clickable"
               v-bind:class="!cell?'green':(getTask(convertCoordinates(i,k,j)).state==='moving'?'blue':'red')" 
               v-on:click="setTarget(i,k,j)"
+              v-bind:title="cell?getTask(convertCoordinates(i,k,j)).name:''"
               ></button> 
           </td>
         </tr>
@@ -17,13 +18,17 @@
     </div>
     <div class="control-container">
       <div class="unload-container">
-        <button class="btn btn-primary" v-on:click="unload">{{ unloadStage==='first'?'Выгрузить':'Выберите ячейку' }}</button>
+        <button class="btn btn-primary" v-on:click="unload" v-bind:disabled="swapStage!=='first'">
+          {{ unloadStage==='first'?'Выгрузить':'Выберите ячейку' }}
+        </button>
         <div class="alert alert-danger" v-if="badFirstTargetMessage">
           Неподходящая ячейка.
         </div>
       </div>
       <div class="swap-container">
-        <button class="btn btn-primary" v-on:click="swap">{{ swapStage==='first'?'Обменять':(swapStage==='second'?'Выберите 1-ю ячейку':'Выберите 2-ю ячейку') }}</button>
+        <button class="btn btn-primary" v-on:click="swap" v-bind:disabled="unloadStage!=='first'">
+          {{ swapStage==='first'?'Обменять':(swapStage==='second'?'Выберите 1-ю ячейку':'Выберите 2-ю ячейку') }}
+        </button>
         <div class="alert alert-danger" v-if="badSecondTargetMessage">
           Неподходящая ячейка.
         </div>

@@ -1,11 +1,14 @@
 <template>
   <nav class="navbar navbar-expand-sm navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Контора пидорасов</a>
+      <a class="navbar-brand" href="#">cfeee1e5e4e00a</a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul v-for="page in pages" class="navbar-nav" v-bind:key="page.name">
           <li v-if="page.requireLog?(isLoggedIn?true:false):true" class="nav-item">
-            <a class="nav-link" v-bind:href="page.url" v-bind:class="currentPage===page.name?'active':''">
+            <a v-if="page.name === 'Me'" class="nav-link" v-bind:href="'/#/me/'+username" v-bind:class="currentPage===page.name?'active':''">
+              {{ page.title }}
+            </a>
+            <a v-else class="nav-link" v-bind:href="page.url" v-bind:class="currentPage===page.name?'active':''">
               {{ page.title }}
             </a>
           </li>
@@ -31,7 +34,7 @@ export default {
       pages: [
         { name: 'Home',     url: '/#/',         title: 'Главная страница', requireLog: false },
         { name: 'About',    url: '/#/about',    title: 'О нас',            requireLog: false },
-        { name: 'Me',       url: '/#/me',       title: 'Личный кабинет',   requireLog: true  },
+        { name: 'Me',       url: '/#/me/'+this.username, title: 'Личный кабинет', requireLog: true  },
         { name: 'Schedule', url: '/#/schedule', title: 'Расписание',       requireLog: true  },
         { name: 'Stash',    url: '/#/stash',    title: 'Склад',            requireLog: true  },
         { name: 'Stream',   url: '/#/stream',   title: 'Стрим',            requireLog: true  }
@@ -57,7 +60,7 @@ export default {
       return this.$store.getters.userInfo.username;
     }
   }
-}
+} 
 </script>
 
 <style scoped>
